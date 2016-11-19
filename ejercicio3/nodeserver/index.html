@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Online Date Viewer</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+	<script src="https://code.highcharts.com/highcharts.js"></script>
+  </head>
+  <body>
+
+<select id="variable">
+	<option value="temperature" selected="selected">Temperature</option>
+	<option value="preasure">Preasure</option>
+	<option value="humidity">Humidity</option>
+	<option value="windSpeed">Wind speed</option>
+	<option value="solarRadiation">Solar radiation</option>
+	<option value="energy">Energy</option>
+</select>
+<div id="container" style="min-width:310px; height:400px; margin:0px"></div>
+    <script>
+		var socket = io();
+		$(function () {
+    $(document).ready(function () {
+        Highcharts.setOptions({
+            global: {
+                useUTC: false
+            }
+        });
+
+        Highcharts.chart('container', {
+            chart: {
+                type: 'scatter',
+                animation: false, // don't animate in old IE
+                marginRight: 10,
+                events: {
+                    load: function () {
+                        var series = this.series[0];
+                        socket.on('chart value', function(msg){
+                        	var data = JSON.parse(msg);
+                        	var selectedVar = $("#variable").val();
+                        	console.log(selectedVar);
+                        	var yData;
+                        	if(selectedVar == "temperature"){
+                        		yData = data.temperature;
+                        	}else if(selectedVar == "preasure"){
+                        		yData = data.preasure;
+                        	}else if(selectedVar == "humidity"){
+                        		yData = data.humidity;
+                        	}else if(selectedVar == "solarRadiation"){
+                        		yData = data.solarRadiation;
+                        	}else if(selectedVar == "windSpeed"){
+                        		yData = data.windSpeed;
+                        	}else if(selectedVar == "energy"){
+                        		yData = data.energy;
+                        	}
+                        	
+                        	var x = data.timestamp, 
+								y =  yData;
+                        	var shift = false;
+                        	if(series.data.length >= 100){
+                        		shift = true;
+                        	}
+                        	console.log(x + ";" + y);
+                        	series.addPoint([x, y], true, shift);
+                  		});
+                    }
+                }
+            },
+            title: {
+                text: 'Online data'
+            },
+            xAxis: {
+                type: 'datetime',
+                tickPixelInterval: 150
+            },
+            yAxis: {
+                title: {
+                    text: 'Value'
+                }
+            },
+            tooltip: {
+                enabled: false
+            },
+            legend: {
+                enabled: false
+            },
+            exporting: {
+                enabled: false
+            },
+            series: [{
+                name: 'Random data',
+                data: []
+            }]
+        });
+    });
+});
+	</script>
+  </body>
+</html>

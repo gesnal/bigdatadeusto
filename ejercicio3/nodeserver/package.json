@@ -1,0 +1,10 @@
+{
+  "name": "nodeserver",
+  "version": "0.0.1",
+  "description": "Node server",
+  "dependencies": {
+    "express": "^4.10.2",
+    "kafka-node": "^1.0.5",
+    "socket.io": "^1.5.1"
+  }
+}
