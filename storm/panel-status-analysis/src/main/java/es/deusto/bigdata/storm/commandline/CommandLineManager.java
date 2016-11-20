@@ -14,7 +14,7 @@ import com.typesafe.config.ConfigFactory;
 public class CommandLineManager {
 
 	private final static GnuParser parser = new GnuParser();
-	private final static Option option = new Option("c", "External configuration path");
+	private final static Option option = new Option("-c", "External configuration path");
 
 	public static Config getConfig(String[] args) {
 		Config externalConfig = ConfigFactory.empty();
