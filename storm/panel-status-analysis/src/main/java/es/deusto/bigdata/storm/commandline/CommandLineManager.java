@@ -13,15 +13,15 @@ import com.typesafe.config.ConfigFactory;
 
 public class CommandLineManager {
 
+	private static final String CONFIG_PARAM = "c";
 	private final static GnuParser parser = new GnuParser();
-	private final static Option option = new Option("-c", "External configuration path");
 
 	public static Config getConfig(String[] args) {
 		Config externalConfig = ConfigFactory.empty();
 		CommandLine cli;
 		try {
 			cli = getCommandLine(args);
-			File configFile = new File(cli.getOptionValue(option.getValue()));
+			File configFile = new File(cli.getOptionValue(CONFIG_PARAM));
 			externalConfig = externalConfig.withFallback(ConfigFactory.parseFile(configFile));
 			return externalConfig;
 		} catch (ParseException e) {
@@ -31,9 +31,12 @@ public class CommandLineManager {
 	}
 
 	private static CommandLine getCommandLine(String[] args) throws ParseException {
-		Options options = new Options();
+		Option option = new Option(CONFIG_PARAM, true, "External configuration path");
+		option.setArgName("path");
 
+		Options options = new Options();
 		options.addOption(option);
+		
 		return parser.parse(options, args);
 	}
 

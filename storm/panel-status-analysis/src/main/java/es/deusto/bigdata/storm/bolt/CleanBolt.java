@@ -1,5 +1,6 @@
 package es.deusto.bigdata.storm.bolt;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,8 +34,12 @@ public class CleanBolt implements IRichBolt {
 
 	@Override
 	public void execute(Tuple input) {
-		LOG.info(">----> execute this input:" + input);
+		String mensajeJson = new String(input.getBinary(0), StandardCharsets.UTF_8);
+		LOG.info(">----> execute this input:" + mensajeJson);
 		List<Object> toEmit = new ArrayList<>();
+		toEmit.add(System.currentTimeMillis());
+		toEmit.add(Math.random());
+		toEmit.add(Math.random());
 		collector.emit(input, toEmit);
 		collector.ack(input);
 	}

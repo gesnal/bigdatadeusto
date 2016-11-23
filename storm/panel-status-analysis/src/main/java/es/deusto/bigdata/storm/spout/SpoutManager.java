@@ -4,13 +4,18 @@ import org.apache.storm.kafka.BrokerHosts;
 import org.apache.storm.kafka.KafkaSpout;
 import org.apache.storm.kafka.SpoutConfig;
 import org.apache.storm.kafka.ZkHosts;
+import org.apache.storm.spout.RawMultiScheme;
 
 public class SpoutManager {
 
 	public static KafkaSpout getSpout(com.typesafe.config.Config commandLineConfig) {
-		BrokerHosts brokerHosts = new ZkHosts(commandLineConfig.getString("kafka.brokers"));
-		SpoutConfig kafkaSpoutConfig = new SpoutConfig(brokerHosts, commandLineConfig.getString("kafka.topic"),
-				commandLineConfig.getString("zookeeper"), commandLineConfig.getString("kafka.groupId"));
+		BrokerHosts brokerHosts = new ZkHosts(commandLineConfig.getString("zookeeper"));
+		SpoutConfig kafkaSpoutConfig = new SpoutConfig(
+				brokerHosts, 
+				commandLineConfig.getString("kafka.topic"),
+				"", 
+				commandLineConfig.getString("kafka.groupId"));
+		kafkaSpoutConfig.scheme = new RawMultiScheme();
 		return new KafkaSpout(kafkaSpoutConfig);
 	}
 }

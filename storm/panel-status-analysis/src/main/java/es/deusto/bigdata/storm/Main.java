@@ -1,13 +1,9 @@
 package es.deusto.bigdata.storm;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.StormSubmitter;
 import org.apache.storm.topology.TopologyBuilder;
-import org.apache.storm.tuple.Fields;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,21 +17,23 @@ public class Main {
 		
 	public static void main(String[] args) throws Exception {
 		com.typesafe.config.Config commandLineConfig = CommandLineManager.getConfig(args);
-		TopologyBuilder builder = new TopologyBuilder();
-
-		builder.setSpout("SpoutEjercicio1", SpoutManager.getSpout(commandLineConfig));
-		builder.setBolt("BoltLimpiezaEjercicio1", BoltManager.getCleanBolt(commandLineConfig), 3)
-				.fieldsGrouping("1", new Fields("word")).fieldsGrouping("2", new Fields("word"));
-		builder.setBolt("BoltAnalysisEjercicio1", BoltManager.getAnalysisBolt(commandLineConfig)).globalGrouping("1");
-
-		Map<String, Object> stormConfig = new HashMap<>();
-		stormConfig.put(Config.TOPOLOGY_WORKERS, 4);
-
-		runTopology("ejercicio1", commandLineConfig.getBoolean("locally"), builder, stormConfig);
-		StormSubmitter.submitTopology("mytopology", stormConfig, builder.createTopology());
+		TopologyBuilder builder = getTopology(commandLineConfig);
+		runTopology("ejercicio1", commandLineConfig.getBoolean("locally"), builder);
 	}
 
-	private static void runTopology(String name, Boolean locally, TopologyBuilder builder, Map<String, Object> stormConfig) {
+	private static TopologyBuilder getTopology(com.typesafe.config.Config commandLineConfig) {
+		TopologyBuilder builder = new TopologyBuilder();
+		builder.setSpout("SpoutEjercicio1", SpoutManager.getSpout(commandLineConfig));
+		builder.setBolt("BoltLimpiezaEjercicio1", BoltManager.getCleanBolt(commandLineConfig)).shuffleGrouping("SpoutEjercicio1");
+		builder.setBolt("BoltAnalysisEjercicio1", BoltManager.getAnalysisBolt(commandLineConfig)).shuffleGrouping("BoltLimpiezaEjercicio1");
+		
+		return builder;
+	}
+
+	private static void runTopology(String name, Boolean locally, TopologyBuilder builder) {
+		Config stormConfig = new Config();
+		stormConfig.setDebug(true);
+		stormConfig.setNumWorkers(2);
 		LOG.info("Running topology '" + name + "' locally: " + locally);
 		if (locally) {
 			LocalCluster cluster = new LocalCluster();
