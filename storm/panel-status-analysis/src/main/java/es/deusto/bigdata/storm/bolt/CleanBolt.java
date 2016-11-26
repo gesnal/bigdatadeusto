@@ -14,6 +14,8 @@ import org.apache.storm.tuple.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import es.deusto.bigdata.flume.bean.Data;
+
 public class CleanBolt implements IRichBolt {
 
 	public OutputCollector collector;
@@ -26,7 +28,6 @@ public class CleanBolt implements IRichBolt {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-		LOG.info(">----> Clean bolt prepared!");
 		this.stormConf = stormConf;
 		this.context = context;
 		this.collector = collector;
@@ -34,19 +35,19 @@ public class CleanBolt implements IRichBolt {
 
 	@Override
 	public void execute(Tuple input) {
-		String mensajeJson = new String(input.getBinary(0), StandardCharsets.UTF_8);
-		LOG.info(">----> execute this input:" + mensajeJson);
+		String json = new String(input.getBinary(0), StandardCharsets.UTF_8);
+		LOG.debug(">-----> json: " + json);
+		Data data = Data.getInstance(json);
 		List<Object> toEmit = new ArrayList<>();
-		toEmit.add(System.currentTimeMillis());
-		toEmit.add(Math.random());
-		toEmit.add(Math.random());
+		toEmit.add(data.getTimestamp());
+		toEmit.add(data.getSolarRadiation());
+		toEmit.add(data.getEnergy());
 		collector.emit(input, toEmit);
 		collector.ack(input);
 	}
 
 	@Override
 	public void cleanup() {
-		LOG.info(">----> Cleanup");
 	}
 
 	@Override

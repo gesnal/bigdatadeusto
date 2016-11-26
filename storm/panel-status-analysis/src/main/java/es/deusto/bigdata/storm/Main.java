@@ -32,7 +32,7 @@ public class Main {
 
 	private static void runTopology(String name, Boolean locally, TopologyBuilder builder) {
 		Config stormConfig = new Config();
-		stormConfig.setDebug(true);
+		stormConfig.setDebug(false);
 		stormConfig.setNumWorkers(2);
 		LOG.info("Running topology '" + name + "' locally: " + locally);
 		if (locally) {

@@ -1,5 +1,7 @@
 package es.deusto.bigdata.storm.bolt;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.storm.task.OutputCollector;
@@ -32,7 +34,26 @@ public class AnalysisBolt implements IRichBolt {
 	@Override
 	public void execute(Tuple input) {
 		LOG.info(">----> execute this input:" + input);
+		Long timestamp = input.getLong(0);
+		Integer solarRadiation = input.getInteger(1);
+		Double energy = input.getDouble(2);
+		Boolean valid = isValid(solarRadiation, energy);
+		LOG.info("    >----> Timestamp:" + timestamp);
+		LOG.info("    >----> Solar radiation:" + solarRadiation);
+		LOG.info("    >----> Energy:" + energy);
+		LOG.info("    >----> Valid:" + valid);
+		LOG.info("");
+		List<Object> toEmit = new ArrayList<>();
+		toEmit.add(timestamp);
+		toEmit.add(solarRadiation);
+		toEmit.add(energy);
+		toEmit.add(valid);
+		
 		collector.ack(input);
+	}
+
+	private Boolean isValid(Integer solarRadiation, Double energy) {
+		return System.currentTimeMillis() % 2 == 0 ? true : false;
 	}
 
 	@Override
@@ -42,7 +63,7 @@ public class AnalysisBolt implements IRichBolt {
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		Fields fields = new Fields("timestamp", "solarRadiation", "energy");
+		Fields fields = new Fields("timestamp", "solarRadiation", "energy", "valid");
 		declarer.declare(fields);
 	}
 
