@@ -7,15 +7,6 @@
 	<script src="https://code.highcharts.com/highcharts.js"></script>
   </head>
   <body>
-
-<select id="variable">
-	<option value="temperature" selected="selected">Temperature</option>
-	<option value="preasure">Preasure</option>
-	<option value="humidity">Humidity</option>
-	<option value="windSpeed">Wind speed</option>
-	<option value="solarRadiation">Solar radiation</option>
-	<option value="energy">Energy</option>
-</select>
 <div id="container" style="min-width:310px; height:400px; margin:0px"></div>
     <script>
 		var socket = io();
@@ -37,22 +28,8 @@
                         var series = this.series[0];
                         socket.on('chart value', function(msg){
                         	var data = JSON.parse(msg);
-                        	var selectedVar = $("#variable").val();
-                        	console.log(selectedVar);
                         	var yData;
-                        	if(selectedVar == "temperature"){
-                        		yData = data.temperature;
-                        	}else if(selectedVar == "preasure"){
-                        		yData = data.preasure;
-                        	}else if(selectedVar == "humidity"){
-                        		yData = data.humidity;
-                        	}else if(selectedVar == "solarRadiation"){
-                        		yData = data.solarRadiation;
-                        	}else if(selectedVar == "windSpeed"){
-                        		yData = data.windSpeed;
-                        	}else if(selectedVar == "energy"){
-                        		yData = data.energy;
-                        	}
+                       		yData = data.energy;
                         	
                         	var x = data.timestamp, 
 								y =  yData;
