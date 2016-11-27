@@ -33,14 +33,14 @@ public class AnalysisBolt implements IRichBolt {
 
 	@Override
 	public void execute(Tuple input) {
-		LOG.info(">----> execute this input:" + input);
 		Long timestamp = input.getLong(0);
 		Integer solarRadiation = input.getInteger(1);
 		Double energy = input.getDouble(2);
-		Boolean valid = isValid(solarRadiation, energy);
 		LOG.info("    >----> Timestamp:" + timestamp);
 		LOG.info("    >----> Solar radiation:" + solarRadiation);
 		LOG.info("    >----> Energy:" + energy);
+		
+		Boolean valid = isValid(solarRadiation, energy);
 		LOG.info("    >----> Valid:" + valid);
 		LOG.info("");
 		List<Object> toEmit = new ArrayList<>();
@@ -52,8 +52,10 @@ public class AnalysisBolt implements IRichBolt {
 		collector.ack(input);
 	}
 
-	private Boolean isValid(Integer solarRadiation, Double energy) {
-		return System.currentTimeMillis() % 2 == 0 ? true : false;
+	private Boolean isValid(Integer solarRadiation, Double realEnergy) {
+		double modeledEnergy = Math.log1p(solarRadiation);
+		LOG.info("    >----> Modeled energy:" + modeledEnergy);
+		return modeledEnergy - realEnergy >= -0.05;
 	}
 
 	@Override
