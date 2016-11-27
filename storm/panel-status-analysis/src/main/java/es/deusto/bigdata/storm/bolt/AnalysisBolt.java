@@ -36,25 +36,30 @@ public class AnalysisBolt implements IRichBolt {
 		Long timestamp = input.getLong(0);
 		Integer solarRadiation = input.getInteger(1);
 		Double energy = input.getDouble(2);
+		Double modeledEnergy = getModeledEnergy(solarRadiation);
 		LOG.info("    >----> Timestamp:" + timestamp);
 		LOG.info("    >----> Solar radiation:" + solarRadiation);
 		LOG.info("    >----> Energy:" + energy);
-		
-		Boolean valid = isValid(solarRadiation, energy);
+		LOG.info("    >----> Modeled energy:" + modeledEnergy);
+		Boolean valid = isValid(modeledEnergy, energy);
 		LOG.info("    >----> Valid:" + valid);
 		LOG.info("");
 		List<Object> toEmit = new ArrayList<>();
 		toEmit.add(timestamp);
-		toEmit.add(solarRadiation);
 		toEmit.add(energy);
+		toEmit.add(modeledEnergy);
 		toEmit.add(valid);
 		
 		collector.ack(input);
 	}
 
-	private Boolean isValid(Integer solarRadiation, Double realEnergy) {
+	private Double getModeledEnergy(Integer solarRadiation){
 		double modeledEnergy = Math.log1p(solarRadiation);
-		LOG.info("    >----> Modeled energy:" + modeledEnergy);
+		
+		return modeledEnergy;
+	}
+	
+	private Boolean isValid(Double modeledEnergy, Double realEnergy) {
 		return modeledEnergy - realEnergy >= -0.05;
 	}
 
@@ -65,7 +70,7 @@ public class AnalysisBolt implements IRichBolt {
 
 	@Override
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		Fields fields = new Fields("timestamp", "solarRadiation", "energy", "valid");
+		Fields fields = new Fields("timestamp", "energy", "modeledEnergy", "valid");
 		declarer.declare(fields);
 	}
 

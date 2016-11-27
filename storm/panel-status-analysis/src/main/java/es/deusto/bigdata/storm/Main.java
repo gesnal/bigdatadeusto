@@ -26,6 +26,7 @@ public class Main {
 		builder.setSpout("SpoutEjercicio1", SpoutManager.getSpout(commandLineConfig));
 		builder.setBolt("BoltLimpiezaEjercicio1", BoltManager.getCleanBolt(commandLineConfig)).shuffleGrouping("SpoutEjercicio1");
 		builder.setBolt("BoltAnalysisEjercicio1", BoltManager.getAnalysisBolt(commandLineConfig)).shuffleGrouping("BoltLimpiezaEjercicio1");
+		builder.setBolt("BoltGuardarResultadoEnKafka", BoltManager.getKafkaSaversBolt(commandLineConfig)).shuffleGrouping("BoltAnalysisEjercicio1");
 		
 		return builder;
 	}
