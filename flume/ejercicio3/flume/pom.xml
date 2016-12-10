@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>es.deusto.bigdata</groupId>
-	<artifactId>flume</artifactId>
+	<artifactId>ejercicio3-flume</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>flume</name>
+	<name>ejercicio3-flume</name>
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.flume</groupId>
@@ -13,7 +13,7 @@
 		</dependency>
 		<dependency>
 			<groupId>es.deusto.bigdata</groupId>
-			<artifactId>common</artifactId>
+			<artifactId>ejercicio3-common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
