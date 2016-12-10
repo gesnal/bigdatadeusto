@@ -1,4 +1,4 @@
-package es.deusto.bigdata.flume.sink;
+package es.deusto.bigdata.storm.flume.sink;
 
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;

@@ -1,4 +1,4 @@
-package es.deusto.bigdata.flume.interceptor;
+package es.deusto.bigdata.storm.flume.interceptor;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
