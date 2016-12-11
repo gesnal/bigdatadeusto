@@ -20,26 +20,39 @@
 
         Highcharts.chart('container', {
             chart: {
-                type: 'scatter',
                 animation: false, // don't animate in old IE
                 marginRight: 10,
                 events: {
                     load: function () {
-                        var series = this.series[0];
+                        console.log(this.series);
+                        var serieEnergy = this.series[0];
+                        var serieFailure = this.series[1];
                         socket.on('chart value', function(msg){
-                        	var data = JSON.parse(msg);
+                            var data = JSON.parse(msg);
                         	var yData;
                        		yData = data.energy;
                         	
                         	var x = data.timestamp, 
 								y =  yData;
                         	var shift = false;
-                        	if(series.data.length >= 100){
+                        	if(serieEnergy.data.length + serieFailure.data.length >= 100){
                         		shift = true;
                         	}
-                        	console.log(x + ";" + y);
-                        	series.addPoint([x, y], true, shift);
+                        	serieEnergy.addPoint([x, y], true, shift);
                   		});
+                        
+                        socket.on('result', function(msg){
+                            var data = JSON.parse(msg);
+                            var yData;
+                            yData = 7;
+                            var x = data.timestamp, 
+                                y =  yData;
+                            var shift = false;
+                            if(serieEnergy.data.length + serieFailure.data.length >= 100){
+                                shift = true;
+                            }
+                            serieFailure.addPoint([x, y], true, shift);
+                        });
                     }
                 }
             },
@@ -64,10 +77,17 @@
             exporting: {
                 enabled: false
             },
-            series: [{
-                name: 'Random data',
-                data: []
-            }]
+            series: [
+                {
+                    type: 'scatter',
+                    name: 'Energy',
+                    data: []
+                },
+                {
+                    type: 'column',
+                    name: 'Failure',
+                    data: []  
+                }]
         });
     });
 });
