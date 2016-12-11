@@ -25,7 +25,6 @@ public class AnalysisBolt implements IRichBolt {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-		LOG.info(">----> Clean bolt prepared!");
 		this.stormConf = stormConf;
 		this.context = context;
 		this.collector = collector;
@@ -37,19 +36,14 @@ public class AnalysisBolt implements IRichBolt {
 		Integer solarRadiation = input.getInteger(1);
 		Double energy = input.getDouble(2);
 		Double modeledEnergy = getModeledEnergy(solarRadiation);
-		LOG.info("    >----> Timestamp:" + timestamp);
-		LOG.info("    >----> Solar radiation:" + solarRadiation);
-		LOG.info("    >----> Energy:" + energy);
-		LOG.info("    >----> Modeled energy:" + modeledEnergy);
 		Boolean valid = isValid(modeledEnergy, energy);
-		LOG.info("    >----> Valid:" + valid);
-		LOG.info("");
 		List<Object> toEmit = new ArrayList<>();
 		toEmit.add(timestamp);
 		toEmit.add(energy);
 		toEmit.add(modeledEnergy);
 		toEmit.add(valid);
 		
+		collector.emit(input, toEmit);
 		collector.ack(input);
 	}
 
@@ -65,7 +59,6 @@ public class AnalysisBolt implements IRichBolt {
 
 	@Override
 	public void cleanup() {
-		LOG.info(">----> Cleanup");
 	}
 
 	@Override

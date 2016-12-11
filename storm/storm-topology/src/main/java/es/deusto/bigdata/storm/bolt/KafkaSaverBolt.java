@@ -26,7 +26,6 @@ public class KafkaSaverBolt implements IRichBolt {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-		LOG.info(">----> Kafka Saver bolt prepared!");
 		this.stormConf = stormConf;
 		this.context = context;
 		this.collector = collector;
@@ -45,7 +44,6 @@ public class KafkaSaverBolt implements IRichBolt {
 
 	@Override
 	public void cleanup() {
-		LOG.info(">----> Cleanup");
 	}
 
 	@Override

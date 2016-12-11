@@ -5,12 +5,17 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaManager {
 
+	private final static Logger LOG = LoggerFactory.getLogger(KafkaManager.class);
+	
 	private static Producer<String, String> producer;
-
+	
 	public static void produce(String topic, String message) {
+		LOG.debug("Producing in the topic'" + topic + "', the message '" + message + "';");
 		Producer<String, String> producer = getProducer();
 		ProducerRecord<String, String> record = new ProducerRecord<String, String>(topic, message);
 		producer.send(record);
