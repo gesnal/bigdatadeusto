@@ -54,7 +54,8 @@ public class AnalysisBolt implements IRichBolt {
 	}
 	
 	private Boolean isValid(Double modeledEnergy, Double realEnergy) {
-		return modeledEnergy - realEnergy >= -0.05;
+		return modeledEnergy % 2 == 0;
+//		return modeledEnergy - realEnergy >= -0.05;
 	}
 
 	@Override

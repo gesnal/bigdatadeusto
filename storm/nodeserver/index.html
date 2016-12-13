@@ -27,6 +27,7 @@
                         console.log(this.series);
                         var serieEnergy = this.series[0];
                         var serieFailure = this.series[1];
+                        var shift = false;
                         socket.on('chart value', function(msg){
                             var data = JSON.parse(msg);
                         	var yData;
@@ -34,8 +35,7 @@
                         	
                         	var x = data.timestamp, 
 								y =  yData;
-                        	var shift = false;
-                        	if(serieEnergy.data.length + serieFailure.data.length >= 100){
+                        	if(serieEnergy.data.length + serieFailure.data.length >= 200){
                         		shift = true;
                         	}
                         	serieEnergy.addPoint([x, y], true, shift);
@@ -44,14 +44,16 @@
                         socket.on('result', function(msg){
                             var data = JSON.parse(msg);
                             var yData;
-                            yData = 7;
-                            var x = data.timestamp, 
-                                y =  yData;
-                            var shift = false;
-                            if(serieEnergy.data.length + serieFailure.data.length >= 100){
-                                shift = true;
+
+                            if(!data.valid){
+                                yData = data.energy;
+                                var x = data.timestamp, 
+                                    y =  yData;
+                                if(serieEnergy.data.length + serieFailure.data.length >= 200){
+                                    shift = true;
+                                }
+                                serieFailure.addPoint([x, y], true, shift);
                             }
-                            serieFailure.addPoint([x, y], true, shift);
                         });
                     }
                 }
@@ -79,12 +81,14 @@
             },
             series: [
                 {
+                    color: 'rgba(51, 204, 51, 0.9)',
                     type: 'scatter',
                     name: 'Energy',
                     data: []
                 },
                 {
-                    type: 'column',
+                    color: 'rgba(255, 0, 0, 0.9)',
+                    type: 'scatter',
                     name: 'Failure',
                     data: []  
                 }]
