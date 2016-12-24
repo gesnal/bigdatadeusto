@@ -36,6 +36,7 @@ public class DeustoTwitterInterceptor implements Interceptor {
 
 	private Event process(Event event) {
 		byte[] bytes = (byte[]) event.getBody();
+		LOG.info(">--------------> bytes size: " + bytes.length);
 		DatumReader<AvroSchemaTwitter> readerAvro = new SpecificDatumReader<AvroSchemaTwitter>(
 				AvroSchemaTwitter.getClassSchema());
 		BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(bytes, null);
