@@ -1,20 +1,23 @@
 package es.deusto.bigdata.flume.interceptor;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.avro.io.BinaryDecoder;
+import org.apache.avro.file.DataFileReader;
 import org.apache.avro.io.DatumReader;
-import org.apache.avro.io.DecoderFactory;
 import org.apache.avro.specific.SpecificDatumReader;
+import org.apache.commons.io.FileUtils;
 import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.event.EventBuilder;
 import org.apache.flume.interceptor.Interceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import es.deusto.bigdata.flume.twitter.AvroSchemaTwitter;
 
 public class DeustoTwitterInterceptor implements Interceptor {
 
@@ -35,21 +38,34 @@ public class DeustoTwitterInterceptor implements Interceptor {
 	}
 
 	private Event process(Event event) {
-		byte[] bytes = (byte[]) event.getBody();
-		LOG.info(">--------------> bytes size: " + bytes.length);
-		DatumReader<AvroSchemaTwitter> readerAvro = new SpecificDatumReader<AvroSchemaTwitter>(
-				AvroSchemaTwitter.getClassSchema());
-		BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(bytes, null);
-		String tweetText = "";
-		AvroSchemaTwitter tweet = null;
+		File file = null;
 		try {
-			tweet = readerAvro.read(null, decoder);
-			tweetText = tweet.getText().toString();
-		} catch (IOException e) {
-			e.printStackTrace();
+			file = new File("/tmp/" + System.currentTimeMillis() + ".tmp");
+			byte[] bytes = (byte[]) event.getBody();
+			DatumReader<AvroSchemaTwitter> userDatumReader = new SpecificDatumReader<AvroSchemaTwitter>(
+					AvroSchemaTwitter.getClassSchema());
+			FileUtils.writeByteArrayToFile(file, bytes);
+
+			try (DataFileReader<AvroSchemaTwitter> dataFileReader = new DataFileReader<AvroSchemaTwitter>(file,
+					userDatumReader)) {
+				while (dataFileReader.hasNext()) {
+					Object o = dataFileReader.next();
+					String json = o.toString();
+					return EventBuilder.withBody(json, Charset.defaultCharset());
+				}
+			}
+		} catch (Exception e) {
+		} finally {
+			if (file != null && file.exists()) {
+				try {
+					FileUtils.forceDelete(file);
+				} catch (IOException e) {
+				}
+			}
 		}
 
-		return EventBuilder.withBody(tweetText, Charset.defaultCharset());
+		return null;
+
 	}
 
 	public void close() {
