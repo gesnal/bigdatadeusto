@@ -51,6 +51,7 @@ public class DeustoTwitterInterceptor implements Interceptor {
 				while (dataFileReader.hasNext()) {
 					Object o = dataFileReader.next();
 					String json = o.toString();
+					FileUtils.forceDelete(file);
 					return EventBuilder.withBody(json, Charset.defaultCharset());
 				}
 			}

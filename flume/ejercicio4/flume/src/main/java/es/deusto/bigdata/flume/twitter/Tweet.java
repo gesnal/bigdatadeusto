@@ -175,4 +175,22 @@ public class Tweet {
 		this.expandedUrl = expandedUrl;
 	}
 
+	public static String getCsvHeader() {
+		return "id;userFriendsCount;userLocation;userDescription;userStatusesCount;userFollowersCount;userName;userScreenName"
+				+ ";createdAt;text;retweetCount;retweeted;inReplyToUserId;source;inReplyToStatusId;mediaUrlHttps;expandedUrl";
+	}
+
+	public String toCsvLine() {
+		return id + ";" + userFriendsCount + ";" + userLocation + ";" + userDescription + ";" + userStatusesCount + ";"
+				+ userFollowersCount + ";" + userName + ";" + userScreenName + ";" + createdAt + ";" + clean(text) + ";"
+				+ retweetCount + ";" + retweeted + ";" + inReplyToUserId + ";" + source + ";" + inReplyToStatusId + ";"
+				+ mediaUrlHttps + ";" + expandedUrl;
+	}
+
+	private String clean(String text) {
+		String clean = text;
+		clean = clean.replaceAll("\n", " ");
+		return clean;
+	}
+
 }
