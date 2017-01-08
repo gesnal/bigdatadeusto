@@ -21,6 +21,7 @@ import es.deusto.bigdata.flume.twitter.AvroSchemaTwitter;
 
 public class DeustoTwitterInterceptor implements Interceptor {
 
+	private static final String TEMP_FILES_FOLDER = "C:\\tmp\\";
 	private final static Logger LOG = LoggerFactory.getLogger(DeustoTwitterInterceptor.class);
 
 	public Event intercept(Event event) {
@@ -40,7 +41,7 @@ public class DeustoTwitterInterceptor implements Interceptor {
 	private Event process(Event event) {
 		File file = null;
 		try {
-			file = new File("/tmp/" + System.currentTimeMillis() + ".tmp");
+			file = new File(TEMP_FILES_FOLDER + System.currentTimeMillis() + ".tmp");
 			byte[] bytes = (byte[]) event.getBody();
 			DatumReader<AvroSchemaTwitter> userDatumReader = new SpecificDatumReader<AvroSchemaTwitter>(
 					AvroSchemaTwitter.getClassSchema());
