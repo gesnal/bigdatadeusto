@@ -44,7 +44,6 @@
                         socket.on('result', function(msg){
                             var data = JSON.parse(msg);
                             var yData;
-
                             if(!data.valid){
                                 yData = data.energy;
                                 var x = data.timestamp, 
