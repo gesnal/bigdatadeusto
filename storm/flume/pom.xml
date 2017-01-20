@@ -12,9 +12,14 @@
 			<version>1.7.0</version>
 		</dependency>
 		<dependency>
-			<groupId>es.deusto.bigdata</groupId>
-			<artifactId>storm-common</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>2.2.4</version>
 		</dependency>
 	</dependencies>
 	<build>

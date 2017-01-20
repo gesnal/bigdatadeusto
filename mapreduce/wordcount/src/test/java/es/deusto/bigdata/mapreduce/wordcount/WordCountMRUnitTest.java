@@ -17,11 +17,6 @@ import org.junit.Test;
 import es.desuto.bigdata.mapreduce.wordcount.WordCountMapper;
 import es.desuto.bigdata.mapreduce.wordcount.WordCountReducer;
 
-/**
- * MRUnit test for WordCount.
- * 
- * @see https://cwiki.apache.org/confluence/display/MRUNIT/Testing+Word+Count
- */
 public class WordCountMRUnitTest {
     MapReduceDriver<LongWritable, Text, Text, IntWritable, Text, IntWritable> mapReduceDriver;
     MapDriver<LongWritable, Text, Text, IntWritable> mapDriver;
