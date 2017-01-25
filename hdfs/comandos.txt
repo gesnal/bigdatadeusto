@@ -1,0 +1,4 @@
+hdfs dfs -ls /
+hdfs dfs -mkdir /deusto
+hdfs dfs -copyFromLocal data.csv /deusto
+hdsf dfs -get /deusto/data.csv /tmp

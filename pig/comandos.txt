@@ -1,0 +1,2 @@
+En local: pig -x local -f ejercicio.pig
+
