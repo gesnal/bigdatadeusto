@@ -8,27 +8,21 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-/**
- * Mapper that uses a Counter in order to demonstrate unit testing.
- */
-public class WordCountMapperWithCounter extends Mapper<LongWritable, Text, Text, IntWritable> {
+public class WordSizeCountMapper extends Mapper<LongWritable, Text, IntWritable, IntWritable> {
     private final static IntWritable one = new IntWritable(1);
     
-    enum Counters {
-        TOTAL_WORDS
-    }
-    
     // protected to allow unit testing
-    protected Text word = new Text();
+    protected IntWritable wordsize = new IntWritable();
 
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         String line = value.toString();
         StringTokenizer tokenizer = new StringTokenizer(line);
         while (tokenizer.hasMoreTokens()) {
-            word.set(tokenizer.nextToken());
-            context.write(word, one);
-            context.getCounter(Counters.TOTAL_WORDS).increment(1);
+        	String word = tokenizer.nextToken();
+        	int length = word.length();
+            wordsize.set(length);
+            context.write(wordsize, one);
         }
     }
 }
