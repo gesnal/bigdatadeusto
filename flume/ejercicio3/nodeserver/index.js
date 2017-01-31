@@ -3,7 +3,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var kafka = require('kafka-node'), Consumer = kafka.Consumer, client = new kafka.Client(), consumer = new Consumer(
 		client, [ {
-			topic : 'prueba2',
+			topic : 'prueba3',
 			partition : 0
 		}], {
 			autoCommit : false

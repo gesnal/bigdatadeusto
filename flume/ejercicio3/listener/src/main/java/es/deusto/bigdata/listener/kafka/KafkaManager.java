@@ -84,7 +84,8 @@ public class KafkaManager {
 	private KafkaConsumer<String, String> getConsumer(String groupId) {
 		if (consumer == null) {
 			Properties props = new Properties();
-			props.put("bootstrap.servers", "localhost:9092");
+//			props.put("bootstrap.servers", "localhost:9092");
+			props.put("bootstrap.servers", "bigd-hadoop1.deusto.es:6667");
 			props.put("group.id", groupId);
 			props.put("enable.auto.commit", "true");
 			props.put("auto.commit.interval.ms", "1000");

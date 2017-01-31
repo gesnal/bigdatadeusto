@@ -20,7 +20,7 @@ public class ListernerRestController {
 
 	private final KafkaManager kafkaManager = KafkaManager.getInstance();
 	private final static Logger LOGGER = LoggerFactory.getLogger(ListenerWebController.class);
-	private final static String TOPIC = "prueba2";
+	private final static String TOPIC = "prueba3";
 
 	@RequestMapping(value = "/write-kafka", method = RequestMethod.PUT)
 	public String listener(HttpServletRequest request) throws Exception {
